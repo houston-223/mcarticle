@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft History Timeline</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1f2d 0%, #0d1520 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Steve character in background */
+        .steve-container {
+            position: fixed;
+            bottom: 0;
+            right: 5%;
+            width: 250px;
+            height: 400px;
+            z-index: -1;
+            opacity: 0.1;
+            transform: translateY(30px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .steve-head {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: #dda46a;
+            border: 4px solid #000;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .steve-eye {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #000;
+            top: 35px;
+        }
+
+        .steve-eye.left { left: 30px; }
+        .steve-eye.right { right: 30px; }
+
+        .steve-mouth {
+            position: absolute;
+            width: 30px;
+            height: 6px;
+            background: #000;
+            top: 65px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .steve-hair {
+            position: absolute;
+            width: 100px;
+            height: 15px;
+            background: #3a3a3a;
+            top: -15px;
+            left: 0;
+        }
+
+        .steve-hair.left {
+            width: 15px;
+            height: 50px;
+            top: -15px;
+            left: 0;
+        }
+
+        .steve-hair.right {
+            width: 15px;
+            height: 50px;
+            top: -15px;
+            right: 0;
+        }
+
+        .steve-body {
+            position: absolute;
+            width: 80px;
+            height: 120px;
+            background: #3e6cba;
+            border: 4px solid #000;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .steve-arm {
+            position: absolute;
+            width: 20px;
+            height: 100px;
+            background: #dda46a;
+            border: 4px solid #000;
+            top: 100px;
+        }
+
+        .steve-arm.left {
+            left: 20px;
+            transform: rotate(15deg);
+        }
+
+        .steve-arm.right {
+            right: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .steve-leg {
+            position: absolute;
+            width: 25px;
+            height: 100px;
+            background: #2e4e8a;
+            border: 4px solid #000;
+            top: 220px;
+        }
+
+        .steve-leg.left {
+            left: 45px;
+        }
+
+        .steve-leg.right {
+            right: 45px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                         url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="50" height="50" fill="%233a6ea5" opacity="0.3"/><rect x="50" y="50" width="50" height="50" fill="%233a6ea5" opacity="0.3"/></svg>');
+            border-radius: 15px;
+            margin-bottom: 50px;
+            border: 3px solid #3a6ea5;
+            box-shadow: 0 0 30px rgba(58, 110, 165, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .logo {
+            font-size: 4.5rem;
+            color: #4CAF50;
+            text-shadow: 3px 3px 0 #306230, 6px 6px 0 rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #9e9e9e;
+            line-height: 1.6;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: rgba(30, 40, 60, 0.7);
+            border: 2px solid #3a6ea5;
+            border-radius: 10px;
+            padding: 20px;
+            width: 220px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .stat-box:hover {
+            transform: translateY(-10px);
+            background: rgba(40, 60, 90, 0.8);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(to bottom, #3a6ea5, #4CAF50);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+            box-shadow: 0 0 15px rgba(58, 110, 165, 0.8);
+        }
+
+        .timeline-item {
+            padding: 20px 40px;
+            position: relative;
+            width: 50%;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            padding: 30px;
+            background: rgba(30, 40, 60, 0.9);
+            border-radius: 10px;
+            border: 2px solid #3a6ea5;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 20px rgba(58, 110, 165, 0.6);
+            background: rgba(40, 50, 70, 0.95);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent rgba(30, 40, 60, 0.9);
+            right: -10px;
+            top: 50%;
+            margin-top: -10px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent rgba(30, 40, 60, 0.9) transparent transparent;
+            left: -10px;
+            top: 50%;
+            margin-top: -10px;
+        }
+
+        .timeline-date {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-date i {
+            margin-right: 10px;
+            font-size: 1.6rem;
+        }
+
+        .timeline-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .timeline-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: #d0d0d0;
+        }
+
+        .minecraft-icon {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #3a6ea5;
+            border: 3px solid #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            right: -28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            font-size: 1.8rem;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(58, 110, 165, 0.8);
+        }
+
+        .timeline-item:nth-child(even) .minecraft-icon {
+            left: -28px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 50px;
+            font-size: 1.1rem;
+            color: #9e9e9e;
+            border-top: 2px solid #3a6ea5;
+        }
+
+        .minecraft-font {
+            font-family: 'Minecraft', sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(30px); }
+            50% { transform: translateY(10px); }
+            100% { transform: translateY(30px); }
+        }
+
+        /* Blocky background pattern */
+        .block-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(#1a1f2d 1px, transparent 1px),
+                linear-gradient(90deg, #1a1f2d 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+                left: 0 !important;
+            }
+
+            .timeline-item:nth-child(even) .minecraft-icon,
+            .timeline-item:nth-child(odd) .minecraft-icon {
+                left: 6px;
+            }
+
+            .timeline-content::after {
+                display: none;
+            }
+
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .steve-container {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .logo {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Blocky background pattern -->
+    <div class="block-bg"></div>
+    
+    <!-- Steve character in background -->
+    <div class="steve-container">
+        <div class="steve-head">
+            <div class="steve-hair left"></div>
+            <div class="steve-hair right"></div>
+            <div class="steve-hair top"></div>
+            <div class="steve-eye left"></div>
+            <div class="steve-eye right"></div>
+            <div class="steve-mouth"></div>
+        </div>
+        <div class="steve-body"></div>
+        <div class="steve-arm left"></div>
+        <div class="steve-arm right"></div>
+        <div class="steve-leg left"></div>
+        <div class="steve-leg right"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">⛏</div>
+            <h1>Minecraft History Timeline</h1>
+            <p class="subtitle">From its humble beginnings to becoming the best-selling video game of all time, explore the evolution of Minecraft and its impact on gaming culture.</p>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value">238M+</div>
+                    <div class="stat-label">Copies Sold</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">14+ Years</div>
+                    <div class="stat-label">Active Development</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">112M</div>
+                    <div class="stat-label">Monthly Players</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="timeline">
+            <!-- Timeline Item 1 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> May 2009</div>
+                    <h2 class="timeline-title">The Birth of Minecraft</h2>
+                    <p class="timeline-description">Markus "Notch" Persson releases the first public version of Minecraft. Originally called "Cave Game", this early version featured basic block placement and mining mechanics. The game was inspired by games like Dwarf Fortress and Infiniminer.</p>
+                </div>
+                <div class="minecraft-icon">⛏</div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> December 2010</div>
+                    <h2 class="timeline-title">Beta Release & Growing Popularity</h2>
+                    <p class="timeline-description">Minecraft enters beta phase, adding features like biomes, beds, and new block types. The game gains significant traction with over 100,000 purchases in the first weekend of beta release. Multiplayer support is introduced, setting the foundation for the massive online communities to come.</p>
+                </div>
+                <div class="minecraft-icon">🌳</div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> November 2011</div>
+                    <h2 class="timeline-title">Official Release & The Ender Dragon</h2>
+                    <p class="timeline-description">Minecraft 1.0 launches with the addition of The End dimension and the Ender Dragon boss fight. This official release version also introduces brewing, enchanting, and experience points. The game has now sold over 4 million copies.</p>
+                </div>
+                <div class="minecraft-icon">🐉</div>
+            </div>
+
+            <!-- Timeline Item 4 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> September 2014</div>
+                    <h2 class="timeline-title">Microsoft Acquisition</h2>
+                    <p class="timeline-description">Microsoft acquires Mojang for $2.5 billion. Markus Persson steps away from Minecraft development. The acquisition leads to expansion onto new platforms including PlayStation, Nintendo Switch, and mobile devices.</p>
+                </div>
+                <div class="minecraft-icon">💼</div>
+            </div>
+
+            <!-- Timeline Item 5 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> July 2016</div>
+                    <h2 class="timeline-title">Minecraft: Education Edition</h2>
+                    <p class="timeline-description">Microsoft releases Minecraft: Education Edition, designed for classroom use. This version includes features tailored for educators, allowing teachers to use Minecraft as an educational tool in subjects ranging from history to computer programming.</p>
+                </div>
+                <div class="minecraft-icon">🎓</div>
+            </div>
+
+            <!-- Timeline Item 6 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> September 2017</div>
+                    <h2 class="timeline-title">Better Together Update</h2>
+                    <p class="timeline-description">The Better Together Update unifies Minecraft versions across multiple platforms, enabling cross-platform play between Xbox, Switch, mobile, and Windows 10. This update also introduces the Marketplace for community-created content.</p>
+                </div>
+                <div class="minecraft-icon">🤝</div>
+            </div>
+
+            <!-- Timeline Item 7 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> June 2020</div>
+                    <h2 class="timeline-title">Nether Update</h2>
+                    <p class="timeline-description">The massive Nether Update completely revamps the Nether dimension, adding new biomes, mobs (piglin, hoglin), structures (bastions), and blocks. This update represents one of the most significant content expansions since the game's release.</p>
+                </div>
+                <div class="minecraft-icon">🔥</div>
+            </div>
+
+            <!-- Timeline Item 8 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="fas fa-calendar-alt"></i> 2023-Present</div>
+                    <h2 class="timeline-title">Continued Evolution</h2>
+                    <p class="timeline-description">Minecraft continues to grow with regular updates, community events, and spin-offs like Minecraft Dungeons. The game sets records as the best-selling video game of all time, with over 238 million copies sold and nearly 140 million monthly active players.</p>
+                </div>
+                <div class="minecraft-icon">🚀</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Created with ❤️ for Minecraft fans everywhere | The history of Minecraft continues to be written by its incredible community</p>
+            <p>© 2023 Minecraft History Timeline | Not affiliated with Mojang or Microsoft</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add animation when scrolling to timeline items
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeIn 0.8s ease-out forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            timelineItems.forEach(item => {
+                item.style.opacity = '0';
+                observer.observe(item);
+            });
+            
+            // Add subtle glow effect to header on load
+            const header = document.querySelector('header');
+            setTimeout(() => {
+                header.style.boxShadow = '0 0 40px rgba(58, 110, 165, 0.8)';
+                header.style.transition = 'box-shadow 1.5s ease-in-out';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
